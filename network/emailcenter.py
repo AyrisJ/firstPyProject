@@ -8,7 +8,7 @@ def send_email():
     smtp=smtplib.SMTP()
     try:
         smtp.connect("smtp.sina.com")
-        smtp.login("asrasmiao@sina.com","yj19900716")
+        smtp.login("asrasmiao@sina.com","xxxxxxx")
 
         subject="测试Python发送邮件"
         content="hello,python!中文结尾"
