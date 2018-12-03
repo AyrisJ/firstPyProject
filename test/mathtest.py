@@ -22,6 +22,8 @@ print Decimal(2.567).quantize(Decimal('0.00'),decimal.ROUND_DOWN)
 #最终解决方案，先保留6位，最后再保留2位，尽可能减少了最后一步不精准数字对结果的影响
 print Decimal(145.875432)
 print Decimal(145.875432).quantize(Decimal('0.00'),decimal.ROUND_HALF_UP)
+print Decimal(145.875000).quantize(Decimal('0.00'),decimal.ROUND_HALF_DOWN)
+
 
 
 

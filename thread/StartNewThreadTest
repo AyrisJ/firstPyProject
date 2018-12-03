@@ -1,0 +1,30 @@
+# coding=utf8
+
+import thread
+import time
+
+
+def print_time(threadName,delay):
+    count=0
+    while count<5:
+        time.sleep(delay)
+        count+=1
+        print "%s: %s" %(threadName,time.ctime(time.time()))
+
+
+#thread直接创建一个子线程
+try:
+    thread.start_new_thread(print_time,('thread-1',2))
+    thread.start_new_thread(print_time, ('thread-2', 4))
+except:
+    print "Error: unable to start thread"
+
+#因为主线程需要补获子线程运行可能产生的错误，所以主线程不能结束，否则会报错
+#错误如下：
+# Unhandled exception in thread started by
+#sys.excepthook is missing
+#lost sys.stderr
+while 1:
+    pass
+
+

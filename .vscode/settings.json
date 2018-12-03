@@ -1,0 +1,16 @@
+{
+    "python.pythonPath": "${workspaceFolder}/venv/bin/python2.7",
+    "python.venvPath": "/Users/yangjie/workspaces/space2python/firstPyProject/venv",
+    "python.unitTest.unittestArgs": [
+        "-v",
+        "-s",
+        ".",
+        "-p",
+        "test*.py"
+    ],
+    "python.unitTest.pyTestEnabled": false,
+    "python.unitTest.nosetestsEnabled": false,
+    "python.unitTest.unittestEnabled": false,
+    "python.unitTest.promptToConfigure": false,
+    "python.formatting.provider": "yapf"
+}
