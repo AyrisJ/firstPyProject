@@ -1,6 +1,7 @@
 # coding=utf8
 
 import pymysql
+import MySQLdb
 from DBUtils.PooledDB import PooledDB
 
 dbinfo = {
@@ -10,6 +11,16 @@ dbinfo = {
     'dbname': 'develop'
 }
 
+pool = PooledDB(
+    pymysql,
+    2,
+    host=dbinfo['host'],
+    user=dbinfo['username'],
+    passwd=dbinfo['passwd'],
+    db=dbinfo['dbname']
+    )
+
+conn = pool.connection()
 
 # 获取数据库链接
 def getconn():
@@ -19,27 +30,25 @@ def getconn():
         host=dbinfo['host'],
         user=dbinfo['username'],
         passwd=dbinfo['passwd'],
-        db=dbinfo['dbname'])
+        db=dbinfo['dbname']
+        )
     conn = pool.connection()
     return conn
 
 
 # 获取返回字典值的游标
 def getdictcur():
-    conn = getconn()
     cur = conn.cursor(cursor=pymysql.cursors.DictCursor)
     return cur
 
 
 # 获取常用游标
 def getcommoncur():
-    conn = getconn()
     cur = conn.cursor()
     return cur
 
 
 def insertRow(sql, param):
-    conn = getconn()
     cur = conn.cursor()
     try:
         cur.execute(sql, param)
@@ -48,11 +57,10 @@ def insertRow(sql, param):
         print e
     finally:
         cur.close()
-        conn.close()
 
 
 # 查询单个结果,使用常用游标
-def getone(sql, param):
+def getOne(sql, param):
     try:
         cur = getcommoncur()
         cur.execute(sql, param)
@@ -60,10 +68,12 @@ def getone(sql, param):
         return ret[0]
     except Exception as e:
         print e
+    finally:
+        cur.close
 
 
 # 查询单条结果
-def getrow(sql, param):
+def getRow(sql, param):
     try:
         cur = getdictcur()
         cur.execute(sql, param)
@@ -71,14 +81,21 @@ def getrow(sql, param):
         return ret[0]
     except Exception as e:
         print e
+    finally:
+        cur.close()
 
 
 # 查询所有结果集
-def getall(sql, param):
-    cur = getdictcur()
-    cur.execute(sql, param)
-    ret = cur.fetchall()
-    return ret
+def getAll(sql, param):
+    try:
+        cur = getdictcur()
+        cur.execute(sql, param)
+        ret = cur.fetchall()
+        return ret
+    except Exception as e:
+        print e
+    finally:
+        cur.close
 
 
 # 连接数据库测试
@@ -119,4 +136,8 @@ if __name__ == '__main__':
     sql = '''
         insert into user_phone_call_6m(dial_cnt_6m,call_cnt_6m,peer_num) values(%s,%s,%s)
     '''
-    insertRow(sql, (11, 22, "13622986989",))
+    insertRow(sql, (
+        11,
+        22,
+        "13622986989",
+    ))
