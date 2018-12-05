@@ -4,3 +4,4 @@
 .idea/vagrant.xml
 .idea/workspace.xml
 venv/*
+*.pyc
