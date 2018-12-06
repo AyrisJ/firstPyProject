@@ -1,7 +1,4 @@
-.idea/firstPyProject.iml
-.idea/misc.xml
-.idea/modules.xml
-.idea/vagrant.xml
-.idea/workspace.xml
+.idea/*
 venv/*
+.vscode/tags
 *.pyc
