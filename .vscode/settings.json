@@ -1,6 +1,5 @@
 {
-    "python.pythonPath": "${workspaceFolder}/venv/bin/python2.7",
-    "python.venvPath": "/Users/yangjie/workspaces/space2python/firstPyProject/venv",
+    "python.pythonPath": "${workspaceFolder}/venv/bin/python",
     "python.unitTest.unittestArgs": [
         "-v",
         "-s",
@@ -12,5 +11,9 @@
     "python.unitTest.nosetestsEnabled": false,
     "python.unitTest.unittestEnabled": false,
     "python.unitTest.promptToConfigure": false,
-    "python.formatting.provider": "yapf"
+    "python.formatting.provider": "yapf",
+    "code-runner.executorMap": {
+        "python": "venv/bin/python"
+    },
+    "code-runner.runInTerminal": true
 }
