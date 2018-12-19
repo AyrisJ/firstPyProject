@@ -1,20 +1,22 @@
 # coding=utf-8
 
 import json
+import sys
+import time
+
 import xlrd
 import xlwt
-import time
+
 from db import mysqldbcenter as mydb
 
-import sys
 reload(sys)
 sys.setdefaultencoding("utf-8")
 
 # 导入逾期用户通讯录信息到数据库
-def import_mobile_list():
+def import_mobile_list(filepath):
     print "import_mobile_list begin-------------"
     try:
-        with open("/Users/yangjie/Desktop/mobilelist1207_1.txt", "r") as load_f:
+        with open(filepath, "r") as load_f:
             load_dict = json.load(load_f)
             mobile_list = load_dict['data']
 
@@ -47,9 +49,9 @@ def import_mobile_list():
     print "import_mobile_list finish----------"
 
 # 批量导入多个用户的通话记录数据到数据库
-def import_all_contact_info():
+def import_all_contact_info(filepath):
     print "import_all_contact_info begin----------------"
-    with open("/Users/yangjie/Desktop/overdue1207_1.txt", "r") as load_f:
+    with open(filepath, "r") as load_f:
         load_datas = json.load(load_f)
     for load_data in load_datas['data']:
         import_contact_detail(load_data)
@@ -65,6 +67,8 @@ def import_contact_detail(load_data):
     mobile=load_dict['body']['base']['mobile']
     print name,idnum,mobile
 
+    if not load_dict['body']['extensiveInner']['serviceResultDetails'].has_key('MoXieCarrierReport'):
+        return
     contact_details = load_dict['body']['extensiveInner'][
         'serviceResultDetails']['MoXieCarrierReport'][0]['outputResult'][
             'call_contact_detail']
@@ -127,9 +131,6 @@ def export_contact_analysis():
             where upca.mobile=%s order by call_cnt_6m desc limit 30
         '''
         callrecords=mydb.getAll(callsql,(item['mobile'],))
-        for call in callrecords:
-            print unicode(call['peer_name'])
-        
 
         for i in range(30):
             if startpos%30==1:
@@ -170,7 +171,7 @@ def print_mobile_name():
         readbook = xlrd.open_workbook(filename)
         sheet = readbook.sheet_by_index(0)
         nrows = sheet.nrows
-        ncols = sheet.ncols
+        # ncols = sheet.ncols
 
         # print nrows, ncols
         # print sheet.cell_value(1, 1)
@@ -219,9 +220,22 @@ def print_mobile_name():
     print "print_mobile_name finish-----------------"
 
 
-if __name__ == '__main__':
-    # import_all_contact_info()
-    export_contact_analysis()
-    # import_mobile_list()
-    # print_mobile_name()
+def cleandata():
+    sql='''
+        delete from user_phone_list
+    '''
+    mydb.delall(sql,())
+    sql='''
+        delete from user_phone_call_analy
+    '''
+    mydb.delall(sql,())
 
+
+if __name__ == '__main__':
+    import_all_contact_info("/Users/yangjie/Downloads/overdue1219_15.csv")
+    # import_all_contact_info("/Users/yangjie/Downloads/overdue1217_1_2.csv")
+
+    import_mobile_list("/Users/yangjie/Downloads/mobilelist1219_17.csv")
+    export_contact_analysis()
+    cleandata()
+    # print_mobile_name()
